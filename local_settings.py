@@ -38,11 +38,11 @@ DATABASES = {
      'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'dmoj',
-        'USER': 'dmoj',
-        'PASSWORD': 'dmoj',
-        'HOST': '172.25.3.3',
+        'USER': 'root',
+        'PASSWORD': 'Your-passwORD',
+        'HOST': 'db',
         'OPTIONS': {
-            'charset': 'utf8mb4',
+            'charset': 'utf8',
             'sql_mode': 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION',
         },
     }

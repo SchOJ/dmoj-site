@@ -5,12 +5,16 @@ FROM debian:jessie
 
 RUN mkdir /site /uwsgi
 
-RUN sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list && 
-    echo 'deb https://mirrors.ustc.edu.cn/nodesource/deb/node_6.x stretch main' >> /etc/apt/sources.list && \
+RUN sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list && \
+    sed -i 's/security.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list && \
     apt-get update && \
-    apt-get install -y nano debconf-utils mysql-client libmysqlclient-dev gnupg wget git gcc g++ make python-dev libxml2-dev libxslt1-dev zlib1g-dev gettext curl wget openssl ruby-sass vi nodejs npm supervisor uwsgi nginx && \
-    wget -q --no-check-certificate -O- https://bootstrap.pypa.io/get-pip.py | python && \
-    npm install -g pleeease-cli --registry=https://registry.npm.taobao.org && \
+    apt-get install -y nano debconf-utils mysql-client libmysqlclient-dev gnupg wget git gcc g++ make python-dev libxml2-dev libxslt1-dev zlib1g-dev gettext curl wget openssl ruby-sass vim supervisor uwsgi nginx
+RUN echo 'deb http://mirrors.ustc.edu.cn/nodesource/deb/node_8.x stretch main' >> /etc/apt/sources.list && \
+    gpg --keyserver keyserver.ubuntu.com --recv-keys 68576280 && \
+    gpg --armor --export 68576280 | apt-key add - && \
+    apt-get update && apt-get install -y nodejs 
+RUN wget -q --no-check-certificate -O- https://bootstrap.pypa.io/get-pip.py | python
+RUN npm install -g pleeease-cli --registry=https://registry.npm.taobao.org --unsafe-perm && \
     apt-get clean
 
 RUN git clone https://github.com/DMOJ/site.git /site
