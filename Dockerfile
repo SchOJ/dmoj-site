@@ -43,8 +43,7 @@ ADD nginx.conf /etc/nginx/sites-enabled
 RUN service nginx reload
 
 COPY loaddata.sh /site
-RUN service nginx reload && \
-    service supervisor start && \
+RUN service supervisor start && \
     service nginx start
 
 WORKDIR /site
