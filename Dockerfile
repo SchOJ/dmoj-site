@@ -36,15 +36,6 @@ RUN sh make_style.sh && \
     python manage.py compilemessages && \
     python manage.py compilejsi18n
 
-RUN service mysql start && \
-    mysql -uroot --execute="CREATE DATABASE dmoj DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;" && \
-    python manage.py migrate && \
-    python manage.py loaddata navbar && \
-    python manage.py loaddata language_small && \
-# The next line is optional
-    python manage.py loaddata demo && \
-    service mysql stop
-
 RUN mkdir /osite && \
     mv /var/lib/mysql /osite && \
     mv /site /osite
