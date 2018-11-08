@@ -10,10 +10,10 @@
 # SECURITY WARNING: keep the secret key used in production secret!
 # You may use <http://www.miniwebtool.com/django-secret-key-generator/>
 # to generate this key.
-SECRET_KEY = 'This key is not very secure and you should change it.'
+SECRET_KEY = 'y(t&*d%+#!v@*4Sh3ltEr2vwx5P0rT3rr_$1^+-$9(pi^wkn$p'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True  # Change to False once you are done with runserver testing.
+DEBUG = False  # Change to False once you are done with runserver testing.
 
 # Uncomment and set to the domain names this site is intended to serve.
 # You must do this once you set DEBUG to False.
