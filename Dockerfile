@@ -5,17 +5,18 @@ FROM debian:jessie
 
 RUN mkdir /site /uwsgi
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 RUN sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list && \
-    sed -i 's/security.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list && \
+    sed -i 's/security.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list && \
     apt-get update && \
-    debconf-set-selections <<< 'mysql-server mysql-server/root_password password Your-passwORD' && \
-    apt-get install -y nano debconf-utils mysql-client mysql-server libmysqlclient-dev gnupg wget git gcc g++ make python-dev libxml2-dev libxslt1-dev zlib1g-dev gettext curl wget openssl ruby-sass vim supervisor uwsgi uwsgi-plugin-python nginx
+    apt-get install -y nano debconf-utils mysql-client mysql-server libmysqlclient-dev gnupg wget git gcc g++ make python-dev libxml2-dev libxslt1-dev zlib1g-dev gettext curl wget openssl vim supervisor uwsgi uwsgi-plugin-python nginx
 RUN echo 'deb http://mirrors.ustc.edu.cn/nodesource/deb/node_8.x stretch main' >> /etc/apt/sources.list && \
     gpg --keyserver keyserver.ubuntu.com --recv-keys 68576280 && \
     gpg --armor --export 68576280 | apt-key add - && \
     apt-get update && apt-get install -y nodejs 
 RUN wget -q --no-check-certificate -O- https://bootstrap.pypa.io/get-pip.py | python
-RUN npm install -g pleeease-cli --registry=https://registry.npm.taobao.org --unsafe-perm && \
+RUN npm install -g sass pleeease-cli --registry=https://registry.npm.taobao.org --unsafe-perm && \
     apt-get clean
 
 RUN git clone https://gitee.com/crlf/site.git /site
@@ -36,12 +37,17 @@ RUN sh make_style.sh && \
     python manage.py compilejsi18n
 
 RUN service mysql start && \
-    mysql -uroot -pdmoj --execute="CREATE DATABASE dmoj DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;" && \
+    mysql -uroot --execute="CREATE DATABASE dmoj DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;" && \
     python manage.py migrate && \
     python manage.py loaddata navbar && \
     python manage.py loaddata language_small && \
 # The next line is optional
-    python manage.py loaddata demo
+    python manage.py loaddata demo && \
+    service mysql stop
+
+RUN mkdir /osite && \
+    mv /var/lib/mysql /osite && \
+    mv /site /osite
 
 COPY uwsgi.ini /uwsgi
 COPY site.conf bridged.conf wsevent.conf /etc/supervisor/conf.d/
@@ -49,8 +55,9 @@ COPY config.js /site/websocket
 
 RUN rm /etc/nginx/sites-enabled/*
 ADD nginx.conf /etc/nginx/sites-enabled
+ADD start.sh /
 
-CMD sh /start.sh
+ENTRYPOINT /bin/sh /start.sh
 
 EXPOSE 80
 # Comment next line if you do not use SSL/TLS.
