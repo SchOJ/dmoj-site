@@ -1,6 +1,7 @@
 # dmoj-site
-Docker image for SchOJ site.
+Dockerfile for DMOJ judge site and database.
 
-See [wiki of SchOJ/dmoj-dockercompose](https://github.com/SchOJ/dmoj-dockercompose/wiki/Install-SchOJ) to install SchOJ.
+[![](https://images.microbadger.com/badges/image/schoj/site.svg)](https://microbadger.com/images/schoj/site)
 
-\* SchOJ is a fork of DMOJ.
+* [Install SchOJ/DMOJ with docker-compose](https://github.com/schoj/dmoj-dockercompose)
+* [Use this image only](https://github.com/SchOJ/dmoj-dockercompose/wiki/Docker-images)
