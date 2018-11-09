@@ -13,7 +13,7 @@ RUN sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list && \
     apt-get install -y nano debconf-utils libmysqlclient-dev gnupg wget git gcc g++ make python-dev libxml2-dev libxslt1-dev zlib1g-dev gettext curl wget openssl vim supervisor uwsgi uwsgi-plugin-python nginx
 RUN echo 'deb http://mirrors.ustc.edu.cn/nodesource/deb/node_8.x stretch main' >> /etc/apt/sources.list && \
     echo 'deb http://mirrors.tuna.tsinghua.edu.cn/mariadb/mariadb-10.3.10/repo/debian/ jessie main' >> /etc/apt/sources.list && \
-    apt-key adv --recy-keys --keyserver hkp://keyserver.ubuntu.com 0x1655a0ab68576280 && \
+    apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com 0x1655a0ab68576280 && \
     apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com 0xcbcb082a1bb943db && \
     apt-get update && apt-get install -y nodejs mariadb-server mariadb-client
 RUN wget -q --no-check-certificate -O- https://bootstrap.pypa.io/get-pip.py | python
