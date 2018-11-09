@@ -7,7 +7,7 @@ if [ -e /osite/site ]; then
 fi
 service mysql start
 if [ ! -e /install_done ]; then
-mysql -uroot --execute="CREATE DATABASE dmoj DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci;"
+mysql -uroot --execute="CREATE DATABASE dmoj DEFAULT CHARACTER SET utf8mb4 DEFAULT COLLATE utf8mb4_general_ci;"
 python manage.py migrate
 python manage.py loaddata navbar
 python manage.py loaddata language_small
