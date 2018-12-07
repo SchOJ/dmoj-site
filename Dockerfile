@@ -22,7 +22,7 @@ RUN wget -q --no-check-certificate -O- https://bootstrap.pypa.io/get-pip.py | py
 RUN npm install -g sass pleeease-cli --registry=https://registry.npm.taobao.org --unsafe-perm && \
     apt-get clean
 
-RUN git clone https://gitee.com/crlf/site.git /site
+RUN git clone https://github.com/schoj/site.git /site
 
 WORKDIR /site
 RUN git submodule init && \
