@@ -16,7 +16,7 @@ RUN echo 'deb http://mirrors.ustc.edu.cn/nodesource/deb/node_8.x stretch main' >
     echo 'deb http://mirrors.tuna.tsinghua.edu.cn/mariadb/mariadb-10.3.10/repo/debian/ jessie main' >> /etc/apt/sources.list && \
     apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com 0x1655a0ab68576280 && \
     apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com 0xcbcb082a1bb943db && \
-    wget -q0 - https://nginx.org/keys/nginx_signing.key | apt-key add - && \
+    wget -qO - https://nginx.org/keys/nginx_signing.key | apt-key add - && \
     apt-get update && apt-get install -y nodejs mariadb-server mariadb-client nginx
 RUN wget -q --no-check-certificate -O- https://bootstrap.pypa.io/get-pip.py | python
 RUN npm install -g sass pleeease-cli --registry=https://registry.npm.taobao.org --unsafe-perm && \
