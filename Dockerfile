@@ -47,8 +47,8 @@ COPY uwsgi.ini /uwsgi
 COPY site.conf bridged.conf wsevent.conf /etc/supervisor/conf.d/
 COPY config.js /site/websocket
 
-RUN rm /etc/nginx/sites-enabled/*
-ADD nginx.conf /etc/nginx/sites-enabled
+RUN rm /etc/nginx/conf.d/*
+ADD nginx.conf /etc/nginx/conf.d
 ADD start.sh /
 
 ENTRYPOINT /bin/sh /start.sh
