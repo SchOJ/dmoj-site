@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM debian:buster
 
 # DMOJ Site Dockerfile
 # If you are using external judgers, UNCOMMENT last two lines.
@@ -10,37 +10,36 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list && \
     sed -i 's/security.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list && \
     apt-get update && \
-    apt-get install -y nano debconf-utils libmysqlclient-dev gnupg wget git gcc g++ make python-dev libxml2-dev libxslt1-dev zlib1g-dev gettext curl wget openssl vim supervisor uwsgi uwsgi-plugin-python
-RUN echo 'deb http://mirrors.ustc.edu.cn/nodesource/deb/node_8.x stretch main' >> /etc/apt/sources.list && \
-    echo 'deb http://nginx.org/packages/debian/ jessie nginx' >> /etc/apt/sources.list && \
-    echo 'deb http://mirrors.tuna.tsinghua.edu.cn/mariadb/mariadb-10.3.10/repo/debian/ jessie main' >> /etc/apt/sources.list && \
+    apt-get install -y nano debconf-utils default-libmysqlclient-dev gnupg wget git gcc g++ make python-dev libxml2-dev libxslt1-dev zlib1g-dev gettext curl wget openssl vim supervisor
+RUN echo 'deb http://mirrors.ustc.edu.cn/nodesource/deb/node_12.x buster main' >> /etc/apt/sources.list && \
+    echo 'deb http://nginx.org/packages/debian/ buster nginx' >> /etc/apt/sources.list && \
     apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com 0x1655a0ab68576280 && \
-    apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com 0xcbcb082a1bb943db && \
     wget -qO - https://nginx.org/keys/nginx_signing.key | apt-key add - && \
-    apt-get update && apt-get install -y nodejs mariadb-server mariadb-client nginx
-RUN wget -q --no-check-certificate -O- https://bootstrap.pypa.io/get-pip.py | python
-RUN npm install -g sass pleeease-cli --registry=https://registry.npm.taobao.org --unsafe-perm && \
+    apt-get update && apt-get install -y nodejs nginx
+RUN apt-get install -y python3-pip && \
+    npm install -g cnpm --registry=http://registry.npm.taobao.org
+RUN cnpm install -g sass postcss-cli autoprefixer && \
     apt-get clean
 
-RUN git clone https://github.com/schoj/site.git /site --depth=1 --single-branch --branch py2
+RUN git clone https://github.com/dmoj/online-judge.git /site --depth=1
 
 WORKDIR /site
 RUN git submodule init && \
+    git config -f .gitmodules submodule.resources/libs.shallow true && \
+    git config -f .gitmodules submodule.resources/pagedown.shallow true && \
     git submodule update
-RUN pip install -r requirements.txt && \
-    pip install mysqlclient django_select2 websocket-client && \
-    npm install qu ws simplesets
-
+RUN pip3 install -r requirements.txt
+RUN pip3 install mysqlclient django_select2 websocket-client pymysql uswgi
+RUN cnpm install qu ws simplesets
 COPY local_settings.py /site/dmoj
 
 WORKDIR /site
-RUN sh make_style.sh && \
-    echo yes | python manage.py collectstatic && \
-    python manage.py compilemessages && \
-    python manage.py compilejsi18n
+RUN ./make_style.sh && \
+    echo yes | python3 manage.py collectstatic && \
+    python3 manage.py compilemessages && \
+    python3 manage.py compilejsi18n
 
 RUN mkdir /osite && \
-    mv /var/lib/mysql /osite && \
     mv /site /osite
 
 COPY uwsgi.ini /uwsgi

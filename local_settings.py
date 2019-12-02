@@ -13,7 +13,7 @@
 SECRET_KEY = 'y(t&*d%+#!v@*4Sh3ltEr2vwx5P0rT3rr_$1^+-$9(pi^wkn$p'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False  # Change to False once you are done with runserver testing.
+DEBUG = True  # Change to False once you are done with runserver testing.
 
 # Uncomment and set to the domain names this site is intended to serve.
 # You must do this once you set DEBUG to False.
@@ -39,8 +39,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'dmoj',
         'USER': 'root',
-        'PASSWORD': '',
-        'HOST': '127.0.0.1',
+        'PASSWORD': 'dmoj',
+        'HOST': 'db',
         'OPTIONS': {
             'charset': 'utf8',
             'sql_mode': 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION',
