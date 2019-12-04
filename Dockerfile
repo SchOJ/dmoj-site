@@ -7,39 +7,30 @@ RUN mkdir /site /uwsgi
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list && \
-    sed -i 's/security.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list && \
-    apt-get update && \
-    apt-get install -y nano debconf-utils default-libmysqlclient-dev gnupg wget git gcc g++ make python-dev libxml2-dev libxslt1-dev zlib1g-dev gettext curl wget openssl vim supervisor mycli
-RUN echo 'deb http://mirrors.ustc.edu.cn/nodesource/deb/node_12.x buster main' >> /etc/apt/sources.list && \
+RUN echo 'deb http://deb.nodesource.com/node_12.x buster main' >> /etc/apt/sources.list && \
     echo 'deb http://nginx.org/packages/debian/ buster nginx' >> /etc/apt/sources.list && \
     wget -qO - https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - && \
     wget -qO - https://nginx.org/keys/nginx_signing.key | apt-key add - && \
-    apt-get update && apt-get install -y nodejs nginx
-RUN apt-get install -y python3-pip && \
-    npm install -g cnpm --registry=http://registry.npm.taobao.org
-RUN cnpm install -g sass postcss-cli autoprefixer && \
-    apt-get clean
-
-RUN git clone https://github.com/dmoj/online-judge.git /site --depth=1
+    apt-get update && \
+    apt-get install -y nano debconf-utils default-libmysqlclient-dev gnupg wget git gcc g++ make python-dev libxml2-dev libxslt1-dev zlib1g-dev gettext curl wget openssl vim supervisor mycli python3-pip nodejs nginx && \
+    npm install -g sass postcss-cli autoprefixer && \
+    apt-get clean && \
+    git clone https://github.com/dmoj/online-judge.git /site --depth=1
 
 WORKDIR /site
+COPY local_settings.py /site/dmoj
 RUN git submodule init && \
     git config -f .gitmodules submodule.resources/libs.shallow true && \
     git config -f .gitmodules submodule.resources/pagedown.shallow true && \
-    git submodule update
-RUN pip3 install -r requirements.txt
-RUN pip3 install mysqlclient django_select2 websocket-client pymysql uWSGI
-RUN cnpm install qu ws simplesets
-COPY local_settings.py /site/dmoj
-
-WORKDIR /site
-RUN ./make_style.sh && \
+    git submodule update && \
+    pip3 install -r requirements.txt && \
+    pip3 install mysqlclient django_select2 websocket-client pymysql uWSGI && \
+    npm install qu ws simplesets && \
+    ./make_style.sh && \
     echo yes | python3 manage.py collectstatic && \
     python3 manage.py compilemessages && \
-    python3 manage.py compilejsi18n
-
-RUN mkdir /osite && \
+    python3 manage.py compilejsi18n && \
+    mkdir /osite && \
     mv /site /osite
 
 COPY uwsgi.ini /uwsgi
