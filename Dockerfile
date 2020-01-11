@@ -20,7 +20,7 @@ RUN npm install -g cnpm --registry=http://registry.npm.taobao.org
 RUN cnpm install -g sass postcss-cli autoprefixer && \
     apt-get clean
 
-RUN git clone https://github.com/dmoj/online-judge.git /site --depth=1
+RUN git clone https://github.com/schoj/site.git /site --depth=1 --branch=2.0-master
 
 WORKDIR /site
 RUN git submodule init && \
