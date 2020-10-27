@@ -17,7 +17,7 @@ RUN echo 'deb http://mirrors.ustc.edu.cn/nodesource/deb_12.x buster main' >> /et
     wget -qO - https://nginx.org/keys/nginx_signing.key | apt-key add - && \
     apt-get update && apt-get install -y nodejs nginx
 RUN npm install -g cnpm --registry=http://registry.npm.taobao.org
-RUN cnpm install -g sass postcss-cli autoprefixer && \
+RUN cnpm install -g sass postcss postcss-cli autoprefixer && \
     apt-get clean
 
 RUN git clone https://github.com/schoj/site.git /site --depth=1 --branch=2.0-master
