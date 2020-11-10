@@ -20,7 +20,7 @@ RUN npm install -g cnpm --registry=http://registry.npm.taobao.org
 RUN cnpm install -g sass postcss postcss-cli autoprefixer && \
     apt-get clean
 
-RUN useradd dmoj && \
+RUN useradd -U r dmoj && \
     mkdir /site && \
     chown dmoj:dmoj /site
 
@@ -52,6 +52,7 @@ RUN rm /etc/nginx/conf.d/*
 ADD nginx.conf /etc/nginx/conf.d
 ADD start.sh /
 
+USER root
 ENTRYPOINT /bin/sh /start.sh
 
 EXPOSE 80
