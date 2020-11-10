@@ -20,9 +20,13 @@ RUN npm install -g cnpm --registry=http://registry.npm.taobao.org
 RUN cnpm install -g sass postcss postcss-cli autoprefixer && \
     apt-get clean
 
-RUN git clone https://github.com/schoj/site.git /site --depth=1 --branch=2.0-master
+RUN useradd dmoj && \
+    mkdir /site && \
+    chown dmoj:dmoj /site
 
+USER dmoj
 WORKDIR /site
+RUN git clone https://github.com/schoj/site.git /site --depth=1 --branch=2.0-master
 RUN git submodule init && \
     git config -f .gitmodules submodule.resources/libs.shallow true && \
     git config -f .gitmodules submodule.resources/pagedown.shallow true && \
@@ -32,7 +36,6 @@ RUN pip3 install mysqlclient django_select2 websocket-client pymysql uWSGI
 RUN cnpm install qu ws simplesets
 COPY local_settings.py /site/dmoj
 
-WORKDIR /site
 RUN ./make_style.sh && \
     echo yes | python3 manage.py collectstatic && \
     python3 manage.py compilemessages && \
@@ -52,11 +55,9 @@ ADD start.sh /
 ENTRYPOINT /bin/sh /start.sh
 
 EXPOSE 80
-# Comment next line if you do not use SSL/TLS.
 EXPOSE 443 
 EXPOSE 15100
 EXPOSE 15101
 EXPOSE 15102
-# Uncomment below if you need judge from external judgers.
-#EXPOSE 9998
-#EXPOSE 9999
+EXPOSE 9998
+EXPOSE 9999
