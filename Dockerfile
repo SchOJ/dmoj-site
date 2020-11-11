@@ -20,33 +20,29 @@ RUN npm install -g cnpm --registry=http://registry.npm.taobao.org
 RUN cnpm install -g sass postcss postcss-cli autoprefixer && \
     apt-get clean
 
-RUN useradd -U -r dmoj && \
-    mkdir /site && \
-    chown dmoj:dmoj /site
+RUN useradd -m -U dmoj
 
-USER dmoj
 WORKDIR /site
 RUN git clone https://github.com/schoj/site.git /site --depth=1 --branch=2.0-master
 RUN git submodule init && \
     git config -f .gitmodules submodule.resources/libs.shallow true && \
     git config -f .gitmodules submodule.resources/pagedown.shallow true && \
     git submodule update
-RUN pip3 install -r requirements.txt
-RUN pip3 install mysqlclient django_select2 websocket-client pymysql uWSGI
+RUN pip3 config set global.index-url https://opentuna.cn/pypi/web/simple && \
+    pip3 install -r requirements.txt && \
+    pip3 install mysqlclient django_select2 websocket-client pymysql uWSGI
 RUN cnpm install qu ws simplesets
 COPY local_settings.py /site/dmoj
+COPY config.js /site/websocket
 
 RUN ./make_style.sh && \
     echo yes | python3 manage.py collectstatic && \
     python3 manage.py compilemessages && \
-    python3 manage.py compilejsi18n
-
-RUN mkdir /osite && \
+    python3 manage.py compilejsi18n && \
     mv /site /osite
 
 COPY uwsgi.ini /uwsgi
 COPY site.conf bridged.conf wsevent.conf /etc/supervisor/conf.d/
-COPY config.js /site/websocket
 
 RUN rm /etc/nginx/conf.d/*
 ADD nginx.conf /etc/nginx/conf.d
