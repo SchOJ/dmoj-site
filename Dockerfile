@@ -20,7 +20,7 @@ RUN npm install -g cnpm --registry=http://registry.npm.taobao.org
 RUN cnpm install -g sass postcss postcss-cli autoprefixer && \
     apt-get clean
 
-RUN useradd -U r dmoj && \
+RUN useradd -U -r dmoj && \
     mkdir /site && \
     chown dmoj:dmoj /site
 
