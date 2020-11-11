@@ -48,11 +48,13 @@ RUN rm /etc/nginx/conf.d/*
 ADD nginx.conf /etc/nginx/conf.d
 ADD start.sh /
 
-USER root
-ENTRYPOINT /bin/sh /start.sh
+RUN wget https://github.com/ufoscout/docker-compose-wait/releases/download/2.7.3/wait -O /wait && \
+    chmod +x /wait
+
+CMD /wait && /bin/sh /start.sh
 
 EXPOSE 80
-EXPOSE 443 
+EXPOSE 443
 EXPOSE 15100
 EXPOSE 15101
 EXPOSE 15102
