@@ -11,7 +11,7 @@ RUN sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list && \
     sed -i 's/security.debian.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apt/sources.list && \
     apt-get update && \
     apt-get install -y nano debconf-utils default-libmysqlclient-dev gnupg wget git gcc g++ make python-dev libxml2-dev libxslt1-dev zlib1g-dev gettext curl wget openssl vim supervisor mycli python3-pip
-RUN echo 'deb http://mirrors.ustc.edu.cn/nodesource/deb_12.x buster main' >> /etc/apt/sources.list && \
+RUN echo 'deb http://mirrors.ustc.edu.cn/nodesource/deb/node_12.x buster main' >> /etc/apt/sources.list && \
     echo 'deb http://nginx.org/packages/debian/ buster nginx' >> /etc/apt/sources.list && \
     wget -qO - https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - && \
     wget -qO - https://nginx.org/keys/nginx_signing.key | apt-key add - && \
